@@ -37,8 +37,8 @@ There are currently 3 projects in this workspace.
 
 _LIP_Core_ library doesn't have any external dependencies except C++ standard library.
 
-* https://github.com/CLIUtils/CLI11[CLI11] provides command-line arguments parser for _LZW_CLI_.
-* https://github.com/catchorg/Catch2[Catch2] is used in _LZW_Core_Tests_ as a testing framework.
+* https://github.com/CLIUtils/CLI11[CLI11] provides command-line arguments parser for _LIP_CLI_.
+* https://github.com/catchorg/Catch2[Catch2] is used in _LIP_Core_Tests_ as a testing framework.
 
 == Building
 
@@ -48,7 +48,7 @@ In root folder run `premake5` with an argument depending on IDE you want to use.
 
 
 === Visual Studio (Windows)
-In root folder run `premak5 vs2019`. Visual Studio solution with projects will be generated. Open `LZW.sln` with Visual Studio. Everything should be configured properly to build, run and test the program.
+In root folder run `premak5 vs2019`. Visual Studio solution with projects will be generated. Open `LIP.sln` with Visual Studio. Everything should be configured properly to build, run and test the program.
 
 === Makefile (Linux)
 In root folder run `premake5 [--cc=gcc|clang] gmake2`. If `--cc` option is not set, then default C++ compiler will be used. Makefile files structure will be generated. In root folder run `make help` to get available build options. General usage is:
