@@ -13,4 +13,8 @@ public:
     BandSplitter(const std::vector<uint8_t>& data);
 
     void split(const std::vector<uint8_t>& data);
+    std::vector<uint8_t> mergeEven();
+    std::vector<uint8_t> mergeUneven();
+private:
+    std::vector<uint8_t> merge(bool even_result);
 };
