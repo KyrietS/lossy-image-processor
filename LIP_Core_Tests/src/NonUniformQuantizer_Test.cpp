@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstdio>
 #include <numeric>
+#include <cmath>
 
 #pragma warning( disable : 6237 6319 )
 
@@ -150,8 +151,8 @@ TEST_CASE("Quantization of data with resolution of 2")
     NonUniformQuantizer quant(2);
     quant.quantize(data);
 
-    byte_t mean_left = (50 + 100 + 100 + 100) / 4;
-    byte_t mean_right = (200 + 200 + 200 + 250) / 4;
+    byte_t mean_left = (byte_t)std::round((50 + 100 + 100 + 100) / 4.0);
+    byte_t mean_right = (byte_t)std::round((200 + 200 + 200 + 250) / 4.0);
 
     for (size_t i = 0; i < data.size() / 2; i++) // First half.
         REQUIRE(data[i] == mean_left);
@@ -173,4 +174,40 @@ TEST_CASE("Quantization of data with resolution of 4")
     quant.quantize(data); // No data is lost
 
     CHECK(data == data_copy);
+}
+
+TEST_CASE("Generate quantization table for empty data set")
+{
+    std::vector<byte_t> data;
+
+    SECTION("Resolution of 0")
+    {
+        NonUniformQuantizer quant(0);
+        auto quant_table = quant.getQuantizationTable(data);
+        REQUIRE(quant_table.size() == 256);
+        for (size_t i = 0; i < quant_table.size(); i++)
+            REQUIRE(quant_table[i] == i);
+    }
+}
+
+TEST_CASE("Generate quantization table from data")
+{
+    std::vector<byte_t> data = {
+        50,
+        100, 100, 100,
+        200, 200, 200,
+        250
+    };
+    NonUniformQuantizer quant(2);
+    auto quant_table = quant.getQuantizationTable(data);
+
+    byte_t mean_left = (byte_t)std::round((50 + 100 + 100 + 100) / 4.0);
+    byte_t mean_right = (byte_t)std::round((200 + 200 + 200 + 250) / 4.0);
+
+    REQUIRE(quant_table.size() == 256);
+
+    for (size_t i = 0; i <= 101; i++) // First half.
+        REQUIRE((int)quant_table[i] == (int)mean_left);
+    for (size_t i = 102; i < 255; i++) // Second half.
+        REQUIRE((int)quant_table[i] == (int)mean_right);
 }

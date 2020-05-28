@@ -9,6 +9,7 @@ public:
     NonUniformQuantizer(size_t resolution);
 
     void quantize(std::vector<uint8_t>& data);
+    std::array<uint8_t, 256> getQuantizationTable(const std::vector<uint8_t>& data);
 private:
     const size_t resolution;
     std::array<uint64_t, 256> histogram;

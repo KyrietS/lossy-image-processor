@@ -12,6 +12,15 @@ NonUniformQuantizer::NonUniformQuantizer(size_t resolution)
 
 void NonUniformQuantizer::quantize(std::vector<byte_t>& data)
 {
+    auto quantization_table = getQuantizationTable(data);
+
+    // Quantizing values.
+    for (byte_t& byte : data)
+        byte = quantization_table[byte];
+}
+
+std::array<uint8_t, 256> NonUniformQuantizer::getQuantizationTable(const std::vector<uint8_t>& data)
+{
     fillHistogram(data);
     findBoundaries();
 
@@ -23,13 +32,11 @@ void NonUniformQuantizer::quantize(std::vector<byte_t>& data)
         size_t left = boundaries[i - 1];
         size_t right = boundaries[i];
         byte_t quantized_value = meanBetweenBoundaries(left, right);
-        for (size_t k = left; k <= right; k++)
+        for (size_t k = left; k < right; k++)
             quantization_table[k] = quantized_value;
     }
 
-    // Quantizing values.
-    for (byte_t& byte : data)
-        byte = quantization_table[byte];
+    return quantization_table;
 }
 
 void NonUniformQuantizer::fillHistogram(const std::vector<byte_t>& data)
@@ -45,7 +52,7 @@ void NonUniformQuantizer::findBoundaries()
 
     boundaries.clear();
     boundaries.push_back(0);
-    boundaries.push_back(255);
+    boundaries.push_back(256);
 
     while (boundaries.size() < resolution + 1)
     {
@@ -69,6 +76,7 @@ size_t NonUniformQuantizer::findMiddleBoundary(size_t left, size_t right)
 {
     long long left_sum = 0;
     long long right_sum = 0;
+    long long middle = 0;
 
     while (left != right)
     {
@@ -76,22 +84,24 @@ size_t NonUniformQuantizer::findMiddleBoundary(size_t left, size_t right)
         {
             left_sum += histogram[left];
             left++;
+            middle = left;
         }
         else
         {
-            right_sum += histogram[right];
+            middle = right;
             right--;
+            right_sum += histogram[right];
         }
     }
 
-    return left;
+    return middle;
 }
 
 byte_t NonUniformQuantizer::meanBetweenBoundaries(size_t left, size_t right)
 {
     long long weighted_sum = 0;
     long long sum_of_weights = 0;
-    for (size_t i = left; i <= right; i++)
+    for (size_t i = left; i < right; i++)
     {
         weighted_sum += i * histogram[i];
         sum_of_weights += histogram[i];
@@ -100,5 +110,5 @@ byte_t NonUniformQuantizer::meanBetweenBoundaries(size_t left, size_t right)
     if (sum_of_weights == 0)
         return (byte_t)(right - left) / 2;
     else
-        return (byte_t)(weighted_sum / sum_of_weights);
+        return (byte_t)((double)weighted_sum / sum_of_weights + 0.5);
 }
