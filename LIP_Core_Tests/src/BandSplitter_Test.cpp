@@ -125,7 +125,7 @@ TEST_CASE("Merge bands with single element")
 
 }
 
-TEST_CASE("Split bands with two elements")
+TEST_CASE("Merge bands with two elements")
 {
     BandSplitter bs;
     std::vector<byte_t> data = { 50, 80 };
@@ -140,7 +140,7 @@ TEST_CASE("Split bands with two elements")
     CHECK(result[1] == 80);
 }
 
-TEST_CASE("Split bands with many elements (even)")
+TEST_CASE("Merge bands with many elements (even)")
 {
     BandSplitter bs;
     const int DATA_SIZE = 10;
@@ -160,7 +160,7 @@ TEST_CASE("Split bands with many elements (even)")
         REQUIRE(result[i] == data[i]);
 }
 
-TEST_CASE("Split bands with many elements (uneven)")
+TEST_CASE("Merge bands with many elements (uneven)")
 {
     BandSplitter bs;
     const int DATA_SIZE = 11;
