@@ -73,7 +73,7 @@ TEST_CASE("Load blue image", "[TGA]")
 TEST_CASE("Save red image", "[TGA]")
 {
     Tga img(path_red);
-    img.save("red.tga.test", 4, 4); // Save new file
+    img.save("red.tga.test"); // Save new file
 
     SECTION("Verify that image is saved correctly")
     {
