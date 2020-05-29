@@ -9,6 +9,12 @@ BandSplitter::BandSplitter(const std::vector<byte_t>& data)
     split(data);
 }
 
+BandSplitter::BandSplitter(const std::vector<float>& upper, const std::vector<float>& lower)
+{
+    upper_band = upper;
+    lower_band = lower;
+}
+
 void BandSplitter::split(const std::vector<byte_t>& data)
 {
     if (data.size() == 0)
@@ -57,6 +63,11 @@ std::vector<byte_t> BandSplitter::merge(bool even_result)
         {
             float even = lower_band[i] - upper_band[i];
             float uneven = lower_band[i] + upper_band[i];
+
+            even = even < 0 ? 0 : even;
+            even = even > 255 ? 255 : even;
+            uneven = uneven < 0 ? 0 : uneven;
+            uneven = uneven > 255 ? 255 : uneven;
 
             result.push_back((byte_t)even);
             result.push_back((byte_t)uneven);

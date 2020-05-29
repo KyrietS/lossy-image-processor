@@ -179,3 +179,25 @@ TEST_CASE("Merge bands with many elements (uneven)")
     for (size_t i = 0; i < data.size(); i++)
         REQUIRE(result[i] == data[i]);
 }
+
+TEST_CASE("Merge 0 and 255s")
+{
+    BandSplitter bs;
+    const std::vector<byte_t> data = { 
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        255, 255, 255, 0,
+        255, 255, 0, 255
+    };
+    const int BAND_SIZE = data.size() / 2;
+
+    bs.split(data);
+    REQUIRE(bs.upper_band.size() == BAND_SIZE);
+    REQUIRE(bs.lower_band.size() == BAND_SIZE);
+
+    auto result = bs.mergeEven();
+    REQUIRE(result.size() == data.size());
+
+    for (size_t i = 0; i < data.size(); i++)
+        REQUIRE(result[i] == data[i]);
+}
