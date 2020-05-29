@@ -11,6 +11,7 @@ public:
 
     BandSplitter() = default;
     BandSplitter(const std::vector<uint8_t>& data);
+    BandSplitter(const std::vector<float>& upper, const std::vector<float>& lower);
 
     void split(const std::vector<uint8_t>& data);
     std::vector<uint8_t> mergeEven();
