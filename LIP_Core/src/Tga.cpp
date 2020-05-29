@@ -19,8 +19,6 @@ void Tga::load(const std::string& path)
 
 	file.seekg(12, file.beg);
 
-	uint16_t width;
-	uint16_t height;
 	file.read(reinterpret_cast<char*>(&width), 2);
 	file.read(reinterpret_cast<char*>(&height), 2);
 	size_t num_of_pixels = (size_t)width * (size_t)height;
@@ -38,7 +36,7 @@ void Tga::load(const std::string& path)
 	}
 }
 
-void Tga::save(const std::string& path, uint16_t width, uint16_t height)
+void Tga::save(const std::string& path)
 {
 	size_t total_pixels = data[0].size(); // size of one of the channels
 	if ((size_t)width * (size_t)height != total_pixels)
