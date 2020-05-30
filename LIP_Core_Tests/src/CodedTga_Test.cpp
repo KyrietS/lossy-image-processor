@@ -77,7 +77,7 @@ TEST_CASE("Encode & Decode colorful image with resolution of 8")
     ctga.encode(tga);
     Tga result = ctga.decode();
     
-    // The image should be decoded with no loss
+    // The image should be decoded with almost no loss
     for (size_t i = 0; i < result.data[0].size(); i++)
     {
         REQUIRE(std::abs((int)result.data[0][i] - (int)tga.data[0][i]) <= 1);

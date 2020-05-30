@@ -10,13 +10,13 @@ using byte_t = uint8_t;
 CodedTga::CodedTga(int resolution)
     : resolution(resolution) {}
 
-CodedTga::CodedTga(int resolution, const Tga& original)
+CodedTga::CodedTga(int resolution, const Tga& original, bool uniform)
     : resolution(resolution)
 {
-    encode(original);
+    encode(original, uniform);
 }
 
-void CodedTga::encode(const Tga& original)
+void CodedTga::encode(const Tga& original, bool uniform_diff)
 {
     if (original.data.size() != channels.size())
         throw std::runtime_error("Incompatible image.");
@@ -42,7 +42,7 @@ void CodedTga::encode(const Tga& original)
 
         // Lower band is quantized differentialy with non-uniform quantizer
         DifferentialQuantizer diff_quantizer(resolution);
-        diff_quantizer.quantize(channels[i].lower_band);
+        diff_quantizer.quantize(channels[i].lower_band, uniform_diff);
     }
 }
 
