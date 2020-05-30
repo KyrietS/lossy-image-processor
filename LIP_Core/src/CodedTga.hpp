@@ -18,14 +18,14 @@ public:
     std::array<Band, 3> channels;
 
     CodedTga(int resolution);
-    CodedTga(int resolution, const Tga& original);
-    void encode(const Tga& original);
+    CodedTga(int resolution, const Tga& original, bool uniform);
+    void encode(const Tga& original, bool uniform = false);
     Tga decode();
 
 private:
     int resolution;
-    uint16_t width;
-    uint16_t height;
+    uint16_t width = 0;
+    uint16_t height = 0;
 
     std::vector<uint8_t> floatToByteVectorBiased(const std::vector<float>& vec);
     std::vector<uint8_t> floatToByteVector(const std::vector<float>& vec);

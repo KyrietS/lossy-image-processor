@@ -5,10 +5,8 @@
 
 #include <stdexcept>
 
-class Statistics
+namespace Statistics
 {
-public:
-
 	// Mean Squared Error for whole image
 	double mse(const Tga& original, const Tga& coded)
 	{
@@ -52,9 +50,10 @@ public:
 	}
 
 	// Signal to Noise Ratio for whole image
-	double snr(double mse, const Tga& original)
+	double snr(const Tga& original, const Tga& encoded)
 	{
-		if (mse == 0 || original.data.size() == 0)
+		double mse_value = mse(original, encoded);
+		if (mse_value == 0 || original.data.size() == 0)
 			return 0.0;
 
 		double error = 0;
@@ -69,12 +68,13 @@ public:
 			}
 		}
 
-		return error / (mse * num_of_channels * num_of_pixels);
+		return error / (mse_value * num_of_channels * num_of_pixels);
 	}
 
-	double snr(double mse, const std::vector<uint8_t> original)
+	double snr(const std::vector<uint8_t> original, const std::vector<uint8_t> encoded)
 	{
-		if (mse == 0 || original.size() == 0)
+		double mse_value = mse(original, encoded);
+		if (mse_value == 0 || original.size() == 0)
 			return 0.0;
 
 		double error = 0;
@@ -85,6 +85,6 @@ public:
 			error += original_value * original_value;
 		}
 
-		return error / (mse * num_of_pixels);
+		return error / (mse_value * num_of_pixels);
 	}
-};
+}
